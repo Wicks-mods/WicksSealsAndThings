@@ -68,6 +68,47 @@ end
 
 local function grey(line) return 0.5, 0.5, 0.5, true end
 
+-- ============================================================
+-- Hotkey labels
+-- ============================================================
+-- The bound key in the corner of each button, shortened the way action
+-- bars do it: SHIFT-1 reads S1, a mouse button M4, the numpad N.
+
+local SHORT = {
+    { "SHIFT%-", "S" }, { "CTRL%-", "C" }, { "ALT%-", "A" }, { "META%-", "M" },
+    { "BUTTON", "M" }, { "MOUSEWHEELUP", "MwU" }, { "MOUSEWHEELDOWN", "MwD" },
+    { "NUMPADPLUS", "N+" }, { "NUMPADMINUS", "N-" }, { "NUMPADMULTIPLY", "N*" },
+    { "NUMPADDIVIDE", "N/" }, { "NUMPADDECIMAL", "N." }, { "NUMPAD", "N" },
+    { "SPACE", "Sp" }, { "BACKSPACE", "Bs" }, { "CAPSLOCK", "Cp" },
+    { "PAGEUP", "PU" }, { "PAGEDOWN", "PD" }, { "INSERT", "Ins" }, { "DELETE", "Del" },
+    { "HOME", "Hm" }, { "END", "End" }, { "TAB", "Tab" }, { "ENTER", "Ent" },
+}
+
+local function shortKey(key)
+    if type(key) ~= "string" or key == "" then return "" end
+    for _, r in ipairs(SHORT) do key = key:gsub(r[1], r[2]) end
+    return key
+end
+
+local function addHotkey(b)
+    b.hotkey = Chrome:Text(b, 9, C.text, "OUTLINE")
+    b.hotkey:SetPoint("TOPRIGHT", -2, -2)
+    b.hotkey:SetJustifyH("RIGHT")
+    b.hotkey:SetWordWrap(false)
+end
+
+function UI:RefreshHotkeys()
+    local f = self.strip
+    if not f then return end
+    local get = rawget(_G, "GetBindingKey")
+    for _, b in ipairs({ f.cycle, f.bless, f.swapTwo, f.swapShield }) do
+        if b and b.hotkey then
+            local key = get and get("CLICK " .. b:GetName() .. ":LeftButton")
+            b.hotkey:SetText(shortKey(key))
+        end
+    end
+end
+
 -- Each of the two swap keys. The icon is the piece that key puts in
 -- your hands; the fel edge means that set is already on.
 local function makeSwap(parent, which, name)
@@ -193,6 +234,9 @@ function UI:BuildStrip()
         f.swapTwo = makeSwap(f, "twoHand", "WicksSealsTwoHandButton")
         f.swapShield = makeSwap(f, "shield", "WicksSealsShieldButton")
     end
+
+    for _, b in ipairs({ f.cycle, f.bless, f.swapTwo, f.swapShield }) do addHotkey(b) end
+    self:RefreshHotkeys()
 
     -- Right-click anywhere on the strip opens the kit, matching the other
     -- kits' launcher. The keys are secure, so their right-click goes
@@ -370,8 +414,10 @@ function UI:Init()
     self:ApplyStripVisibility()
     -- Attributes could not be written while the character was in combat
     -- at login; write them the moment that clears.
-    ns.RegisterEvents({ "PLAYER_REGEN_ENABLED" })
+    ns.RegisterEvents({ "PLAYER_REGEN_ENABLED", "UPDATE_BINDINGS" })
     ns:On("PLAYER_REGEN_ENABLED", function()
         if UI.rebuildStale then UI:Rebuild() end
     end)
+    -- A key rebound under Key Bindings shows on the strip straight away.
+    ns:On("UPDATE_BINDINGS", function() UI:RefreshHotkeys() end)
 end

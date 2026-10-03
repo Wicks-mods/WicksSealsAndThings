@@ -4,6 +4,8 @@
 
 - The seal key wears the seal that is on you, and shows Seal of the
   Crusader faded when no seal is up.
+- Each key on the strip shows its keybinding in the corner, shortened
+  the way action bars do it, and follows a rebind straight away.
 
 ## 0.9.0
 
