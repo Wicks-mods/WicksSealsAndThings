@@ -1,12 +1,5 @@
 <Bindings>
-    <Binding name="CLICK WicksSealsButton1:LeftButton" header="WICKSSEALS" category="ADDONS"/>
-    <Binding name="CLICK WicksSealsButton2:LeftButton" category="ADDONS"/>
-    <Binding name="CLICK WicksSealsButton3:LeftButton" category="ADDONS"/>
-    <Binding name="CLICK WicksSealsButton4:LeftButton" category="ADDONS"/>
-    <Binding name="CLICK WicksSealsButton5:LeftButton" category="ADDONS"/>
-    <Binding name="CLICK WicksSealsButton6:LeftButton" category="ADDONS"/>
-    <Binding name="CLICK WicksSealsJudgeButton:LeftButton" category="ADDONS"/>
-    <Binding name="CLICK WicksSealsCycleButton:LeftButton" category="ADDONS"/>
+    <Binding name="CLICK WicksSealsCycleButton:LeftButton" header="WICKSSEALS" category="ADDONS"/>
     <Binding name="CLICK WicksSealsBlessButton:LeftButton" category="ADDONS"/>
     <Binding name="CLICK WicksSealsTwoHandButton:LeftButton" category="ADDONS"/>
     <Binding name="CLICK WicksSealsShieldButton:LeftButton" category="ADDONS"/>

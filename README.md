@@ -4,40 +4,30 @@ The paladin kit for **World of Warcraft: Forever**, built on
 [WickCore](https://github.com/Wicksmods/WickCore).
 
 A paladin's loadout is a seal, a blessing, an aura and the weapon in
-hand, and half the fight is keeping the first one on and the last one
-right. This kit puts every seal you know in a row, lights the one that
-is on you, gives Judgement a key that falls back to the seal, puts the
-Crusader opener on one key, and gives you two keys to swap between your
-two-hander and your shield.
+hand. This kit puts the seal dance on one key, your blessing on
+another, says which seal and aura are on you, and gives you two keys to
+swap between your two-hander and your shield.
 
 ## What it does
 
-**Seal strip.** One 30px row: a key per seal you know, Judgement, the
-seal cycle, a blessing key, two lines saying which seal and aura are up,
-and the two weapon swap keys. The seal that is on you is ringed in fel green.
-Shift-drag moves it even when locked.
+**Seal strip.** One 30px row: the seal key, the blessing key, two lines
+saying which seal and aura are up, and the two weapon swap keys. The
+seal key is ringed in fel green while a seal is on you. Shift-drag moves
+it even when locked.
 
 Nothing on the strip is a list written down from Classic. Which seals,
 blessings and auras exist comes from your spellbook, so a seal Forever
 renames or retunes shows up as itself.
 
-**Judgement, or the seal.** Judgement first, your fighting seal on the
-line after it. A macro cannot read whether a seal is on you, so the
-second line is a fallback rather than a check: it runs whenever
-Judgement cannot, which puts a seal on when you have none. It also
-means a press while Judgement is on cooldown recasts the seal you
-have, so do not spam it. The seal is the one you were fighting under,
-or the one you name with `/wsl seal <name>`. `/wsl reseal off` makes
-it judge alone.
-
-**Seal cycle.** The seal dance on one key, the way Totems and Things
-twists totems: Seal of the Crusader, judge it onto the target, then
-Seal of Righteousness for the thirty seconds that judgement lasts, and
-the next press starts over. One step per press, resetting on a new
-target or after thirty quiet seconds. The fighting seal follows the one you had on, or the one
-you name with `/wsl seal <name>`. `/wsl cycle <spell, spell, ...>` sets your own steps,
-`/wsl cycle reset <seconds>` the quiet time, `/wsl cycle off` removes
-it.
+**The seal key.** Back and forth, the way Totems and Things twists
+totems: Seal of the Crusader on the first press, your fighting seal on
+the next, the Crusader again after that. Judge the Crusader with
+whatever you judge with. It goes back to the Crusader after 27 quiet
+seconds, which is about what a judgement lasts, and when combat ends,
+so every fight opens on the Crusader. The fighting seal follows the
+seal you had on, or the one you name with `/wsl seal <name>`.
+`/wsl cycle <spell, spell>` sets your own steps, `/wsl cycle reset
+<seconds>` the quiet time.
 
 **Blessing key.** Casts your blessing on a friendly target, or on you
 with none. It follows the blessing that is on you, or the one you name
@@ -71,10 +61,9 @@ every other kit.
 |---|---|
 | `/wsl` | show or hide the seal strip |
 | `/wsl kit` | talents and the pre-pull checklist |
-| `/wsl seal <name>` | the seal Judgement falls back to and the cycle ends on; `auto` follows what you had on |
-| `/wsl reseal on|off` | whether the Judgement key carries the seal line |
+| `/wsl seal <name>` | the fighting seal; `auto` follows what you had on |
 | `/wsl bless <name>` | the blessing key's spell; `auto` follows what you had on |
-| `/wsl cycle ...` | the cycle key's steps, `auto`, `off`, or `reset <seconds>` |
+| `/wsl cycle ...` | the seal key's steps, `auto`, `off`, or `reset <seconds>` |
 | `/wsl swap on|off` | keep the swap keys loaded |
 | `/wsl pin <2h|1h|shield> [link|clear]` | choose a piece by hand |
 | `/wsl fury on|off` | Righteous Fury on the checklist |

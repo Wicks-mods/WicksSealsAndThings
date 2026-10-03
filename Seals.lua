@@ -147,7 +147,7 @@ function Seals:IconFor(name)
     return info and info.icon or nil
 end
 
--- The seal the Judgement key falls back to and the cycle ends on. Chosen by hand
+-- The seal the cycle ends on. Chosen by hand
 -- with /wsl seal <name>, otherwise the seal that was on you the last
 -- time the client would say, otherwise the first seal you know that
 -- is not the Crusader, which is an opener rather than a seal to fight
@@ -166,23 +166,6 @@ function Seals:MainSeal()
     end
     local first = self.seals and self.seals[1]
     return first and first.name or nil
-end
-
--- Judgement, with the fighting seal on the line after it. A macro
--- cannot read whether a seal is on you, so the second line is a
--- fallback rather than a check: it runs whenever Judgement cannot,
--- which puts a seal on when you have none and recasts the one you
--- have when Judgement is simply on cooldown. The user chose that over
--- a key that leaves a bare paladin bare. /wsl reseal off drops it.
-function Seals:JudgeMacro()
-    local j = self.judge
-    if not j then return "" end
-    local lines = { "#showtooltip " .. j.name, "/cast " .. j.name }
-    local seal = self:MainSeal()
-    if db().reseal ~= false and seal then
-        lines[#lines + 1] = "/cast " .. seal
-    end
-    return table.concat(lines, "\n")
 end
 
 -- The blessing the key casts. Chosen with /wsl bless <name>, otherwise
@@ -214,28 +197,28 @@ function Seals:BlessMacro()
     return ("#showtooltip %s\n/cast [help,nodead][@player] %s"):format(b, b)
 end
 
--- The seal dance, as the totem twist is for a shaman: one key, one
--- step per press. Crusader on, judge it onto the target, then the
--- fighting seal for as long as that judgement lasts, which is about
--- thirty seconds; the fourth press starts over. Set by hand with
--- /wsl cycle a, b, c; off with /wsl cycle off; the default needs the
--- Crusader and Judgement both known.
+-- The seal key, as the totem twist is for a shaman: one key, back and
+-- forth. Crusader on, judge it with whatever key you judge with, then
+-- the fighting seal; the next press is the Crusader again. It goes back
+-- to the first step after a quiet spell about as long as a judgement
+-- lasts, and when combat ends, so a new fight opens on the Crusader.
+-- Set by hand with /wsl cycle a, b; off with /wsl cycle off.
 function Seals:CycleSteps()
     local set = db().cycle
     if set == false then return nil end
-    if type(set) == "table" and #set >= 2 then return set end
+    if type(set) == "table" and #set >= 1 then return set end
     if not self.names then self:Scan() end
-    if not (self.names and self.names[CRUSADER] and self.judge) then return nil end
     local main = self:MainSeal()
-    if not main or main == CRUSADER then return { CRUSADER, self.judge.name } end
-    return { CRUSADER, self.judge.name, main }
+    if not main then return nil end
+    if not (self.names and self.names[CRUSADER]) or main == CRUSADER then return { main } end
+    return { CRUSADER, main }
 end
 
 function Seals:CycleMacro()
     local steps = self:CycleSteps()
     if not steps then return "" end
-    local reset = tonumber(db().cycleReset) or 30
-    return ("#showtooltip\n/castsequence reset=target/%d %s"):format(reset, table.concat(steps, ", "))
+    local reset = tonumber(db().cycleReset) or 27
+    return ("#showtooltip\n/castsequence reset=%d/combat %s"):format(reset, table.concat(steps, ", "))
 end
 
 -- ============================================================

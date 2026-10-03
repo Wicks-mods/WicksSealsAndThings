@@ -1,9 +1,9 @@
 -- Wick's Seals and Things
 -- UI.lua: the seal strip.
 --
--- One 30px row: a key per seal you know, a Judgement key, the seal
--- cycle key, two lines saying what is up, and the two weapon swap keys.
--- The seal that is on you is ringed in fel green.
+-- One 30px row: the seal key, the blessing key, two lines saying which
+-- seal and aura are on you, and the two weapon swap keys. The seal key
+-- is ringed in fel green while a seal is on you.
 --
 -- Every key is a SecureActionButton, which is the only way an addon may
 -- cast anything or equip anything. Their attributes are rewritten out of
@@ -43,8 +43,8 @@ local function makeSecure(parent, name, kind)
     b.icon:SetPoint("TOPLEFT", 2, -2)
     b.icon:SetPoint("BOTTOMRIGHT", -2, 2)
     b.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-    -- The lit ring for the seal that is on you. A border of our own
-    -- rather than Blizzard's, so it takes the theme.
+    -- The lit ring. A border of our own rather than Blizzard's, so it
+    -- takes the theme.
     b.ring = {}
     for _, p in ipairs({ { "TOPLEFT", "TOPRIGHT", nil, 1 }, { "BOTTOMLEFT", "BOTTOMRIGHT", nil, 1 },
                          { "TOPLEFT", "BOTTOMLEFT", 1, nil }, { "TOPRIGHT", "BOTTOMRIGHT", 1, nil } }) do
@@ -139,64 +139,23 @@ function UI:BuildStrip()
     local bg = Chrome:Texture(f, "BACKGROUND", C.voidBG); bg:SetAllPoints()
     Chrome:AddBorder(f)
 
-    -- A key per seal. All six exist from the start, since a protected
-    -- button cannot be made mid-fight; the ones for seals you do not
-    -- know yet stay hidden.
-    f.seal = {}
-    for i = 1, ns.Seals.MAX do
-        local b = makeSecure(f, "WicksSealsButton" .. i, "spell")
-        b.index = i
-        b:SetScript("OnEnter", function(s)
-            local e = ns.Seals:Seal(s.index)
-            if not e then return end
-            GameTooltip:SetOwner(s, "ANCHOR_TOP")
-            GameTooltip:SetText(e.name, 1, 1, 1)
-            local active = ns.Seals.lastSeal
-            if active == e.name then
-                GameTooltip:AddLine("On you.", C.fel[1], C.fel[2], C.fel[3])
-            else
-                GameTooltip:AddLine("Click to seal.", grey())
-            end
-            if ns.Seals:MainSeal() == e.name then
-                GameTooltip:AddLine("The Judgement key falls back to this one, and the cycle ends on it.", grey())
-            end
-            GameTooltip:Show()
-        end)
-        b:Hide()
-        f.seal[i] = b
-    end
-
-    -- Judgement, with the fighting seal as the fallback line.
-    f.judge = makeSecure(f, "WicksSealsJudgeButton", "macro")
-    f.judge:SetScript("OnEnter", function(s)
-        GameTooltip:SetOwner(s, "ANCHOR_TOP")
-        local j = ns.Seals.judge
-        GameTooltip:SetText(j and j.name or "Judgement", 1, 1, 1)
-        if not j then
-            GameTooltip:AddLine("Not learned yet.", grey())
-        elseif ns.db and ns.db.profile.reseal ~= false then
-            GameTooltip:AddLine(("Judges. When Judgement cannot go, casts %s instead, so a press with no seal on you puts one on.")
-                :format(ns.Seals:MainSeal() or "your seal"), 0.8, 0.8, 0.8, true)
-            GameTooltip:AddLine("Pressed while Judgement is on cooldown, it recasts the seal. /wsl reseal off to judge alone.", grey())
-        else
-            GameTooltip:AddLine("Judges. /wsl reseal on to cast the seal when Judgement cannot go.", grey())
-        end
-        GameTooltip:Show()
-    end)
-
-    -- The cycle key: a castsequence through the seal dance.
+    -- The seal key: a castsequence back and forth between the Crusader
+    -- and your fighting seal.
     f.cycle = makeSecure(f, "WicksSealsCycleButton", "macro")
     f.cycle:SetScript("OnEnter", function(s)
         GameTooltip:SetOwner(s, "ANCHOR_TOP")
-        GameTooltip:SetText("Seal cycle", 1, 1, 1)
+        GameTooltip:SetText("Seal key", 1, 1, 1)
         local steps = ns.Seals:CycleSteps()
         if not steps then
             GameTooltip:AddLine(ns.db and ns.db.profile.cycle == false and "Off. /wsl cycle auto turns it on."
-                or "Needs Seal of the Crusader and Judgement.", grey())
+                or "No seal learned yet.", grey())
         else
             GameTooltip:AddLine("One press per step: " .. table.concat(steps, ", ") .. ".", 0.8, 0.8, 0.8, true)
-            GameTooltip:AddLine(("Judge the Crusader, then fight under the last one until the judgement wears off. Starts over on a new target or after %d quiet seconds. /wsl cycle to change it.")
-                :format((ns.db and ns.db.profile.cycleReset) or 30), grey())
+            GameTooltip:AddLine(("Back to the first after %d quiet seconds, or when combat ends. /wsl cycle to change it.")
+                :format((ns.db and ns.db.profile.cycleReset) or 27), grey())
+        end
+        if ns.Seals.lastSeal then
+            GameTooltip:AddLine(ns.Seals.lastSeal .. " is on you.", C.fel[1], C.fel[2], C.fel[3])
         end
         GameTooltip:Show()
     end)
@@ -251,9 +210,8 @@ end
 -- ============================================================
 -- Layout and attributes
 -- ============================================================
--- Out of combat only: this shows and hides protected buttons and
--- writes their attributes. In combat the request is kept and honoured
--- the moment the fight ends.
+-- Out of combat only: this writes the keys' attributes. In combat the
+-- request is kept and honoured the moment the fight ends.
 
 function UI:Rebuild()
     local f = self.strip
@@ -265,29 +223,6 @@ function UI:Rebuild()
     self.rebuildStale = nil
 
     local x = PAD
-    local n = ns.Seals:Count()
-    for i = 1, ns.Seals.MAX do
-        local b, e = f.seal[i], ns.Seals:Seal(i)
-        if e then
-            b:SetAttribute("spell", e.name)
-            b:SetAttribute("spell1", e.name)
-            b:ClearAllPoints()
-            b:SetPoint("LEFT", x, 0)
-            b:Show()
-            x = x + BTN + 2
-        else
-            b:SetAttribute("spell", "")
-            b:SetAttribute("spell1", "")
-            b:Hide()
-        end
-    end
-
-    local j = ns.Seals:JudgeMacro()
-    f.judge:SetAttribute("macrotext", j)
-    f.judge:SetAttribute("macrotext1", j)
-    f.judge:ClearAllPoints()
-    f.judge:SetPoint("LEFT", x, 0)
-    x = x + BTN + 2
 
     local cy = ns.Seals:CycleMacro()
     f.cycle:SetAttribute("macrotext", cy)
@@ -347,34 +282,22 @@ function UI:Refresh()
 
     local seal, sealWhy = ns.Seals:ActiveSeal()
     local aura, auraWhy = ns.Seals:ActiveAura()
+    local bless, blessWhy = ns.Seals:ActiveBlessing()
     -- While the client withholds auras the strip keeps the last thing
     -- it knew rather than going blank mid-fight.
     if sealWhy == "restricted" then seal = ns.Seals.lastSeal end
     if auraWhy == "restricted" then aura = ns.Seals.lastAura end
+    if blessWhy == "restricted" then bless = ns.Seals.lastBlessing end
 
-    for i = 1, ns.Seals.MAX do
-        local b, e = f.seal[i], ns.Seals:Seal(i)
-        if e then
-            b.icon:SetTexture(e.icon or QUESTION)
-            ringColor(b, (seal == e.name) and C.fel or C.border)
-        end
-    end
-
-    local j = ns.Seals.judge
-    f.judge.icon:SetTexture(j and j.icon or QUESTION)
-    f.judge.icon:SetDesaturated(j == nil)
-    f.judge.icon:SetAlpha(j and 1 or 0.35)
-    ringColor(f.judge, C.border)
-
+    -- The seal key wears the seal that is on you, or the first step of
+    -- the cycle while none is.
     local steps = ns.Seals:CycleSteps()
-    local first = steps and ns.Seals:IconFor(steps[1])
-    f.cycle.icon:SetTexture(first or (j and j.icon) or QUESTION)
+    local face = seal or (steps and steps[1])
+    f.cycle.icon:SetTexture(ns.Seals:IconFor(face) or QUESTION)
     f.cycle.icon:SetDesaturated(steps == nil)
     f.cycle.icon:SetAlpha(steps and 1 or 0.35)
-    ringColor(f.cycle, C.border)
+    ringColor(f.cycle, seal and C.fel or C.border)
 
-    local bless, blessWhy = ns.Seals:ActiveBlessing()
-    if blessWhy == "restricted" then bless = ns.Seals.lastBlessing end
     local chosen = ns.Seals:MainBlessing()
     f.bless.icon:SetTexture(ns.Seals:IconFor(chosen) or QUESTION)
     f.bless.icon:SetDesaturated(chosen == nil)
