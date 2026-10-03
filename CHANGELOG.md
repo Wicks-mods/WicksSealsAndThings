@@ -1,5 +1,11 @@
 # Wick's Seals and Things - Changelog
 
+## 0.9.0
+
+One version across the suite for the Forever beta. Every addon carries the
+same number so the suite goes to 1.0.0 together at launch. Nothing changed
+from 0.1.0 beyond the number.
+
 ## 0.1.0 - 2026-10-03
 
 First build. The paladin kit for World of Warcraft: Forever.

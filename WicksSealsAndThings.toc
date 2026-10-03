@@ -2,7 +2,7 @@
 ## Title: Wick's Seals and Things
 ## Notes: Paladin loadout kit for World of Warcraft: Forever. Seal strip with a Judgement key, two-hander and sword-and-board swap keys, talents, pre-pull checklist, racials.
 ## Author: Wick
-## Version: 0.1.0
+## Version: 0.9.0
 ## OptionalDeps: WickCore
 ## SavedVariables: WicksSealsSaved
 ## X-Website: https://wicksmods.com
