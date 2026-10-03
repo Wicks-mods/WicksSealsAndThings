@@ -158,7 +158,7 @@ function UI:BuildStrip()
                 GameTooltip:AddLine("Click to seal.", grey())
             end
             if ns.Seals:MainSeal() == e.name then
-                GameTooltip:AddLine("Judgement reseals with this one.", grey())
+                GameTooltip:AddLine("The cycle ends on this one.", grey())
             end
             GameTooltip:Show()
         end)
@@ -166,7 +166,7 @@ function UI:BuildStrip()
         f.seal[i] = b
     end
 
-    -- Judgement, which reseals after it when asked to.
+    -- Judgement. The seal stays on you after it on this client.
     f.judge = makeSecure(f, "WicksSealsJudgeButton", "macro")
     f.judge:SetScript("OnEnter", function(s)
         GameTooltip:SetOwner(s, "ANCHOR_TOP")
@@ -174,12 +174,8 @@ function UI:BuildStrip()
         GameTooltip:SetText(j and j.name or "Judgement", 1, 1, 1)
         if not j then
             GameTooltip:AddLine("Not learned yet.", grey())
-        elseif ns.db and ns.db.profile.reseal ~= false then
-            GameTooltip:AddLine(("Judges, then puts %s back on. If the judgement takes the global cooldown, the second press reseals.")
-                :format(ns.Seals:MainSeal() or "your seal"), 0.8, 0.8, 0.8, true)
-            GameTooltip:AddLine("/wsl reseal off to judge alone; /wsl seal <name> to choose the seal.", grey())
         else
-            GameTooltip:AddLine("Judges. /wsl reseal on to put the seal back after.", grey())
+            GameTooltip:AddLine("Judges the seal on you onto your target. The seal stays on.", 0.8, 0.8, 0.8, true)
         end
         GameTooltip:Show()
     end)
@@ -195,8 +191,8 @@ function UI:BuildStrip()
                 or "Needs Seal of the Crusader and Judgement.", grey())
         else
             GameTooltip:AddLine("One press per step: " .. table.concat(steps, ", ") .. ".", 0.8, 0.8, 0.8, true)
-            GameTooltip:AddLine(("Starts over on a new target or after %d seconds. /wsl cycle to change it.")
-                :format((ns.db and ns.db.profile.cycleReset) or 15), grey())
+            GameTooltip:AddLine(("Judge the Crusader, then fight under the last one until the judgement wears off. Starts over on a new target or after %d quiet seconds. /wsl cycle to change it.")
+                :format((ns.db and ns.db.profile.cycleReset) or 30), grey())
         end
         GameTooltip:Show()
     end)

@@ -147,7 +147,7 @@ function Seals:IconFor(name)
     return info and info.icon or nil
 end
 
--- The seal Judgement puts back and the cycle ends on. Chosen by hand
+-- The seal the cycle ends on. Chosen by hand
 -- with /wsl seal <name>, otherwise the seal that was on you the last
 -- time the client would say, otherwise the first seal you know that
 -- is not the Crusader, which is an opener rather than a seal to fight
@@ -168,20 +168,13 @@ function Seals:MainSeal()
     return first and first.name or nil
 end
 
--- Judgement consumes the seal, so the key that judges puts it back.
--- If the judgement takes the global cooldown the second line fails
--- quietly and the next press of the same key reseals, since a
--- judgement on cooldown fails just as quietly. Either way two presses
--- at most and never the wrong seal.
+-- Judgement alone. On Forever a judgement leaves the seal on you, so
+-- there is nothing to put back; a reseal line here would only recast
+-- the seal and spend the mana.
 function Seals:JudgeMacro()
     local j = self.judge
     if not j then return "" end
-    local lines = { "#showtooltip " .. j.name, "/cast " .. j.name }
-    local seal = self:MainSeal()
-    if db().reseal ~= false and seal then
-        lines[#lines + 1] = "/cast " .. seal
-    end
-    return table.concat(lines, "\n")
+    return ("#showtooltip %s\n/cast %s"):format(j.name, j.name)
 end
 
 -- The blessing the key casts. Chosen with /wsl bless <name>, otherwise
@@ -214,9 +207,11 @@ function Seals:BlessMacro()
 end
 
 -- The seal dance, as the totem twist is for a shaman: one key, one
--- step per press. Crusader on, judge it onto the target, fighting seal
--- back on. Set by hand with /wsl cycle a, b, c; off with /wsl cycle
--- off; the default needs the Crusader and Judgement both known.
+-- step per press. Crusader on, judge it onto the target, then the
+-- fighting seal for as long as that judgement lasts, which is about
+-- thirty seconds; the fourth press starts over. Set by hand with
+-- /wsl cycle a, b, c; off with /wsl cycle off; the default needs the
+-- Crusader and Judgement both known.
 function Seals:CycleSteps()
     local set = db().cycle
     if set == false then return nil end
@@ -231,7 +226,7 @@ end
 function Seals:CycleMacro()
     local steps = self:CycleSteps()
     if not steps then return "" end
-    local reset = tonumber(db().cycleReset) or 15
+    local reset = tonumber(db().cycleReset) or 30
     return ("#showtooltip\n/castsequence reset=target/%d %s"):format(reset, table.concat(steps, ", "))
 end
 

@@ -6,8 +6,8 @@ The paladin kit for **World of Warcraft: Forever**, built on
 A paladin's loadout is a seal, a blessing, an aura and the weapon in
 hand, and half the fight is keeping the first one on and the last one
 right. This kit puts every seal you know in a row, lights the one that
-is on you, gives Judgement a key that puts the seal back, and gives you
-two keys to swap between your two-hander and your shield.
+is on you, puts the Crusader opener on one key, and gives you two keys
+to swap between your two-hander and your shield.
 
 ## What it does
 
@@ -20,17 +20,15 @@ Nothing on the strip is a list written down from Classic. Which seals,
 blessings and auras exist comes from your spellbook, so a seal Forever
 renames or retunes shows up as itself.
 
-**Judgement, then reseal.** Judgement consumes the seal, so the key
-that judges puts it back. It reseals with the seal you were fighting
-under, or the one you name with `/wsl seal <name>`. If the judgement
-takes the global cooldown, the second line fails quietly and the next
-press of the same key reseals. Two presses at most, never the wrong
-seal. `/wsl reseal off` makes it judge alone.
+**Judgement.** A plain key. On Forever a judgement leaves the seal on
+you, so there is nothing to put back.
 
 **Seal cycle.** The seal dance on one key, the way Totems and Things
-twists totems: Seal of the Crusader, Judgement, then your fighting seal,
-one step per press, starting over on a new target or after fifteen
-quiet seconds. `/wsl cycle <spell, spell, ...>` sets your own steps,
+twists totems: Seal of the Crusader, judge it onto the target, then
+Seal of Righteousness for the thirty seconds that judgement lasts, and
+the next press starts over. One step per press, resetting on a new
+target or after thirty quiet seconds. The fighting seal follows the one you had on, or the one
+you name with `/wsl seal <name>`. `/wsl cycle <spell, spell, ...>` sets your own steps,
 `/wsl cycle reset <seconds>` the quiet time, `/wsl cycle off` removes
 it.
 
@@ -66,9 +64,8 @@ every other kit.
 |---|---|
 | `/wsl` | show or hide the seal strip |
 | `/wsl kit` | talents and the pre-pull checklist |
-| `/wsl seal <name>` | the seal Judgement puts back; `auto` follows what you had on |
+| `/wsl seal <name>` | the seal the cycle ends on; `auto` follows what you had on |
 | `/wsl bless <name>` | the blessing key's spell; `auto` follows what you had on |
-| `/wsl reseal on|off` | whether the Judgement key reseals |
 | `/wsl cycle ...` | the cycle key's steps, `auto`, `off`, or `reset <seconds>` |
 | `/wsl swap on|off` | keep the swap keys loaded |
 | `/wsl pin <2h|1h|shield> [link|clear]` | choose a piece by hand |

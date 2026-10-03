@@ -14,11 +14,12 @@ First build. The paladin kit for World of Warcraft: Forever.
   seal and aura are up, and the two weapon swap keys in one 30px row.
   The seal on you is lit. Seals, blessings and auras are read from the
   spellbook rather than from a Classic list.
-- Judgement key that reseals: judges, then puts your fighting seal back.
-  Two presses at most when the judgement takes the global cooldown.
-  `/wsl seal <name>` chooses the seal, `/wsl reseal off` judges alone.
-- Seal cycle key: Seal of the Crusader, Judgement, fighting seal, one
-  step per press, as a castsequence. `/wsl cycle` sets your own steps.
+- Judgement key. A judgement leaves the seal on you on this client, so
+  the key is plain.
+- Seal cycle key: Seal of the Crusader, judge it, then the fighting seal
+  for the thirty seconds that judgement lasts, one step per press, as a
+  castsequence. `/wsl seal <name>` chooses the
+  fighting seal, `/wsl cycle` sets your own steps.
 - Blessing key: your blessing on a friendly target, or on you with none.
   Follows the blessing on you; `/wsl bless <name>` chooses one.
 - Weapon swap keys: two-hander, and one-hander with shield. They
