@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- The seal key now follows the seal you cast. It read your seal but only
+  rewrote the key on login or when a spell was learned, so after
+  learning a new seal it kept casting that one even once you had put
+  Righteousness back on.
 - The seal key wears the seal that is on you, and shows Seal of the
   Crusader faded when no seal is up.
 - Each key on the strip shows its keybinding in the corner, shortened

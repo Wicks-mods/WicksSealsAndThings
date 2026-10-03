@@ -269,6 +269,9 @@ function UI:Rebuild()
 
     local x = PAD
 
+    -- Remember which fighting seal the key was written with, so Refresh
+    -- can tell when a seal you cast should rewrite it.
+    self.builtSeal = ns.Seals:MainSeal()
     local cy = ns.Seals:CycleMacro()
     f.cycle:SetAttribute("macrotext", cy)
     f.cycle:SetAttribute("macrotext1", cy)
@@ -323,9 +326,19 @@ end
 function UI:Refresh()
     local f = self.strip
     if not f or not f:IsShown() then return end
-    if self.rebuildStale then self:Rebuild() return end
+    local fighting = InCombatLockdown and InCombatLockdown()
+    -- Out of combat only; in combat the strip still paints, and the key
+    -- is rewritten the moment the fight ends.
+    if self.rebuildStale and not fighting then self:Rebuild() return end
 
     local seal, sealWhy = ns.Seals:ActiveSeal()
+    -- The key follows the seal you cast. Reading it was never enough on
+    -- its own: the macro was only rewritten on login, on learning a spell
+    -- or on a slash command, so a seal cast by hand moved the picture and
+    -- left the key casting the old one.
+    if ns.Seals:MainSeal() ~= self.builtSeal then
+        if fighting then self.rebuildStale = true else self:Rebuild() return end
+    end
     local aura, auraWhy = ns.Seals:ActiveAura()
     local bless, blessWhy = ns.Seals:ActiveBlessing()
     -- While the client withholds auras the strip keeps the last thing
