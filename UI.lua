@@ -158,7 +158,7 @@ function UI:BuildStrip()
                 GameTooltip:AddLine("Click to seal.", grey())
             end
             if ns.Seals:MainSeal() == e.name then
-                GameTooltip:AddLine("The cycle ends on this one.", grey())
+                GameTooltip:AddLine("The Judgement key falls back to this one, and the cycle ends on it.", grey())
             end
             GameTooltip:Show()
         end)
@@ -166,7 +166,7 @@ function UI:BuildStrip()
         f.seal[i] = b
     end
 
-    -- Judgement. The seal stays on you after it on this client.
+    -- Judgement, with the fighting seal as the fallback line.
     f.judge = makeSecure(f, "WicksSealsJudgeButton", "macro")
     f.judge:SetScript("OnEnter", function(s)
         GameTooltip:SetOwner(s, "ANCHOR_TOP")
@@ -174,8 +174,12 @@ function UI:BuildStrip()
         GameTooltip:SetText(j and j.name or "Judgement", 1, 1, 1)
         if not j then
             GameTooltip:AddLine("Not learned yet.", grey())
+        elseif ns.db and ns.db.profile.reseal ~= false then
+            GameTooltip:AddLine(("Judges. When Judgement cannot go, casts %s instead, so a press with no seal on you puts one on.")
+                :format(ns.Seals:MainSeal() or "your seal"), 0.8, 0.8, 0.8, true)
+            GameTooltip:AddLine("Pressed while Judgement is on cooldown, it recasts the seal. /wsl reseal off to judge alone.", grey())
         else
-            GameTooltip:AddLine("Judges the seal on you onto your target. The seal stays on.", 0.8, 0.8, 0.8, true)
+            GameTooltip:AddLine("Judges. /wsl reseal on to cast the seal when Judgement cannot go.", grey())
         end
         GameTooltip:Show()
     end)

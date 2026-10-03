@@ -147,7 +147,7 @@ function Seals:IconFor(name)
     return info and info.icon or nil
 end
 
--- The seal the cycle ends on. Chosen by hand
+-- The seal the Judgement key falls back to and the cycle ends on. Chosen by hand
 -- with /wsl seal <name>, otherwise the seal that was on you the last
 -- time the client would say, otherwise the first seal you know that
 -- is not the Crusader, which is an opener rather than a seal to fight
@@ -168,13 +168,21 @@ function Seals:MainSeal()
     return first and first.name or nil
 end
 
--- Judgement alone. On Forever a judgement leaves the seal on you, so
--- there is nothing to put back; a reseal line here would only recast
--- the seal and spend the mana.
+-- Judgement, with the fighting seal on the line after it. A macro
+-- cannot read whether a seal is on you, so the second line is a
+-- fallback rather than a check: it runs whenever Judgement cannot,
+-- which puts a seal on when you have none and recasts the one you
+-- have when Judgement is simply on cooldown. The user chose that over
+-- a key that leaves a bare paladin bare. /wsl reseal off drops it.
 function Seals:JudgeMacro()
     local j = self.judge
     if not j then return "" end
-    return ("#showtooltip %s\n/cast %s"):format(j.name, j.name)
+    local lines = { "#showtooltip " .. j.name, "/cast " .. j.name }
+    local seal = self:MainSeal()
+    if db().reseal ~= false and seal then
+        lines[#lines + 1] = "/cast " .. seal
+    end
+    return table.concat(lines, "\n")
 end
 
 -- The blessing the key casts. Chosen with /wsl bless <name>, otherwise

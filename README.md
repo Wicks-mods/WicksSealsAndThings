@@ -6,8 +6,9 @@ The paladin kit for **World of Warcraft: Forever**, built on
 A paladin's loadout is a seal, a blessing, an aura and the weapon in
 hand, and half the fight is keeping the first one on and the last one
 right. This kit puts every seal you know in a row, lights the one that
-is on you, puts the Crusader opener on one key, and gives you two keys
-to swap between your two-hander and your shield.
+is on you, gives Judgement a key that falls back to the seal, puts the
+Crusader opener on one key, and gives you two keys to swap between your
+two-hander and your shield.
 
 ## What it does
 
@@ -20,8 +21,14 @@ Nothing on the strip is a list written down from Classic. Which seals,
 blessings and auras exist comes from your spellbook, so a seal Forever
 renames or retunes shows up as itself.
 
-**Judgement.** A plain key. On Forever a judgement leaves the seal on
-you, so there is nothing to put back.
+**Judgement, or the seal.** Judgement first, your fighting seal on the
+line after it. A macro cannot read whether a seal is on you, so the
+second line is a fallback rather than a check: it runs whenever
+Judgement cannot, which puts a seal on when you have none. It also
+means a press while Judgement is on cooldown recasts the seal you
+have, so do not spam it. The seal is the one you were fighting under,
+or the one you name with `/wsl seal <name>`. `/wsl reseal off` makes
+it judge alone.
 
 **Seal cycle.** The seal dance on one key, the way Totems and Things
 twists totems: Seal of the Crusader, judge it onto the target, then
@@ -64,7 +71,8 @@ every other kit.
 |---|---|
 | `/wsl` | show or hide the seal strip |
 | `/wsl kit` | talents and the pre-pull checklist |
-| `/wsl seal <name>` | the seal the cycle ends on; `auto` follows what you had on |
+| `/wsl seal <name>` | the seal Judgement falls back to and the cycle ends on; `auto` follows what you had on |
+| `/wsl reseal on|off` | whether the Judgement key carries the seal line |
 | `/wsl bless <name>` | the blessing key's spell; `auto` follows what you had on |
 | `/wsl cycle ...` | the cycle key's steps, `auto`, `off`, or `reset <seconds>` |
 | `/wsl swap on|off` | keep the swap keys loaded |

@@ -48,6 +48,7 @@ local PROFILE_DEFAULTS = {
     swap        = true,    -- keep the two swap keys loaded
     pinned      = {},      -- twoHand / oneHand / shield -> itemID a key should always reach for
     wantFury    = false,   -- Righteous Fury on the checklist, for the tank
+    reseal      = true,    -- the Judgement key casts the fighting seal when Judgement cannot go
     mainSeal    = nil,     -- the seal to fight under; nil follows what you had on
     blessing    = nil,     -- the blessing key's spell; nil follows what you had on
     cycle       = nil,     -- the cycle key's steps; nil is the default dance, false is off
@@ -186,7 +187,7 @@ BINDING_HEADER_WICKSSEALS = "Wick's Seals and Things"
 for i = 1, 6 do
     _G["BINDING_NAME_CLICK WicksSealsButton" .. i .. ":LeftButton"] = "Seal key " .. i
 end
-_G["BINDING_NAME_CLICK WicksSealsJudgeButton:LeftButton"] = "Judgement"
+_G["BINDING_NAME_CLICK WicksSealsJudgeButton:LeftButton"] = "Judgement, or the seal"
 _G["BINDING_NAME_CLICK WicksSealsCycleButton:LeftButton"] = "Seal cycle"
 _G["BINDING_NAME_CLICK WicksSealsBlessButton:LeftButton"] = "Blessing"
 _G["BINDING_NAME_CLICK WicksSealsTwoHandButton:LeftButton"] = "Two-hander"
@@ -272,6 +273,15 @@ A:RegisterSlash(function(_, msg)
         A:Print(("blessing key: %s."):format(ns.Seals:MainBlessing() or "none"))
         return
     end
+    if lower:match("^reseal") then
+        local want = lower:match("^reseal%s+(%a+)")
+        if want == "on" then db.reseal = true
+        elseif want == "off" then db.reseal = false
+        else db.reseal = not (db.reseal ~= false) end
+        ns.UI:Rebuild()
+        A:Print("the Judgement key " .. (db.reseal ~= false and "casts the seal when Judgement cannot go." or "judges alone."))
+        return
+    end
     if lower:match("^cycle") then
         local rest = msg:match("^%a+%s+(.+)$")
         if not rest then
@@ -324,5 +334,5 @@ A:RegisterSlash(function(_, msg)
         return
     end
 
-    A:Print("commands: show | strip | lock | unlock | kit | options | seal <name|auto> | bless <name|auto> | cycle [...] | swap [on|off] | pin <2h|1h|shield> [link|clear] | fury [on|off] | cd | status")
+    A:Print("commands: show | strip | lock | unlock | kit | options | seal <name|auto> | bless <name|auto> | reseal [on|off] | cycle [...] | swap [on|off] | pin <2h|1h|shield> [link|clear] | fury [on|off] | cd | status")
 end, "/wsl", "/wseals")
