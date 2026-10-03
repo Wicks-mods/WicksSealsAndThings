@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The seal key keeps the last seal you fought under after it fades,
+  and across reloads. It used to forget it the moment the seal ran
+  out and fall back to whichever seal came first in the spellbook,
+  which put Seal of Fury on the key. With nothing cast yet it now
+  prefers Seal of Righteousness.
 - The seal key now follows the seal you cast. It read your seal but only
   rewrote the key on login or when a spell was learned, so after
   learning a new seal it kept casting that one even once you had put

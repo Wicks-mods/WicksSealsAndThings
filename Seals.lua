@@ -21,11 +21,10 @@ local D, R = Core.Dialect, Core.Restrict
 local Seals = {}
 ns.Seals = Seals
 
--- The strip has room for this many seal keys. Classic paladins have six
--- seals in total, and the keys are bindable, so the count is fixed.
-Seals.MAX = 6
-
 local function starts(name, prefix) return name:find(prefix, 1, true) == 1 end
+
+-- The opener, never the seal you fight under.
+local CRUSADER = "Seal of the Crusader"
 
 -- ============================================================
 -- The spellbook
@@ -42,7 +41,7 @@ function Seals:Scan()
             seen[name] = true
             local e = { name = name, icon = s.icon, spellID = s.spellID }
             if starts(name, "Seal of ") then
-                if #seals < self.MAX then seals[#seals + 1] = e end
+                seals[#seals + 1] = e
             elseif starts(name, "Blessing of ") or starts(name, "Greater Blessing of ") then
                 blessings[#blessings + 1] = e
             elseif name:find(" Aura$") then
@@ -86,9 +85,24 @@ local function auraWith(matcher)
     return nil
 end
 
+-- The character's own store, for what outlives a reload.
+local function charStore()
+    local A = ns.A
+    return A and A.db and A.db.char or nil
+end
+
 function Seals:ActiveSeal()
     local name, why = auraWith(function(n) return starts(n, "Seal of ") end)
     if why ~= "restricted" then self.lastSeal = name end
+    -- The last seal you fought under, kept after it fades. A seal lasts
+    -- thirty seconds here, and forgetting it the moment it dropped sent
+    -- the key back to whatever came first in the spellbook. The Crusader
+    -- is the opener, never the seal you fight under.
+    if name and name ~= CRUSADER then
+        self.fighting = name
+        local c = charStore()
+        if c then c.fightingSeal = name end
+    end
     return name, why
 end
 
@@ -133,7 +147,6 @@ end
 -- The seal you fight with, and the keys built around it
 -- ============================================================
 
-local CRUSADER = "Seal of the Crusader"
 
 local function db() return ns.db and ns.db.profile or {} end
 
@@ -147,21 +160,28 @@ function Seals:IconFor(name)
     return info and info.icon or nil
 end
 
--- The seal the cycle ends on. Chosen by hand
--- with /wsl seal <name>, otherwise the seal that was on you the last
--- time the client would say, otherwise the first seal you know that
--- is not the Crusader, which is an opener rather than a seal to fight
--- under.
+-- The seal the cycle ends on. Chosen by hand with /wsl seal <name>,
+-- otherwise the last seal you fought under (kept after it fades and
+-- across reloads), otherwise Seal of Righteousness, otherwise the first
+-- seal you know that is not the Crusader, which is an opener rather
+-- than a seal to fight under.
+local RIGHTEOUSNESS = "Seal of Righteousness"
 function Seals:MainSeal()
     if not self.seals then self:Scan() end
-    local want = db().mainSeal
-    if type(want) == "string" and want ~= "" then
-        for _, e in ipairs(self.seals or {}) do
-            if e.name:lower() == want:lower() then return e.name end
+    local seals = self.seals or {}
+    local function known(name)
+        if not name then return nil end
+        for _, e in ipairs(seals) do
+            if e.name:lower() == name:lower() then return e.name end
         end
     end
-    if self.lastSeal and self.lastSeal ~= CRUSADER then return self.lastSeal end
-    for _, e in ipairs(self.seals or {}) do
+    local want = db().mainSeal
+    if type(want) == "string" and want ~= "" and known(want) then return known(want) end
+    local c = charStore()
+    local fought = known(self.fighting) or known(c and c.fightingSeal)
+    if fought and fought ~= CRUSADER then return fought end
+    if known(RIGHTEOUSNESS) then return RIGHTEOUSNESS end
+    for _, e in ipairs(seals) do
         if e.name ~= CRUSADER then return e.name end
     end
     local first = self.seals and self.seals[1]

@@ -24,8 +24,9 @@ totems: Seal of the Crusader on the first press, your fighting seal on
 the next, the Crusader again after that. Judge the Crusader with
 whatever you judge with. It goes back to the Crusader after 27 quiet
 seconds, which is about what a judgement lasts, and when combat ends,
-so every fight opens on the Crusader. The fighting seal follows the
-seal you had on, or the one you name with `/wsl seal <name>`.
+so every fight opens on the Crusader. The fighting seal is the last
+seal you fought under, kept after it fades, or Seal of Righteousness
+before you have cast one. `/wsl seal <name>` fixes it to one seal.
 `/wsl cycle <spell, spell>` sets your own steps, `/wsl cycle reset
 <seconds>` the quiet time.
 
