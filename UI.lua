@@ -20,6 +20,7 @@ local UI = {}
 ns.UI = UI
 
 local QUESTION = "Interface\\Icons\\INV_Misc_QuestionMark"
+local RIGHTEOUSNESS = "Seal of Righteousness"
 local DIM = { 0.35, 0.33, 0.40, 1 }
 
 local STRIP_H = 30
@@ -289,13 +290,16 @@ function UI:Refresh()
     if auraWhy == "restricted" then aura = ns.Seals.lastAura end
     if blessWhy == "restricted" then bless = ns.Seals.lastBlessing end
 
-    -- The seal key wears the seal that is on you, or the first step of
-    -- the cycle while none is.
-    local steps = ns.Seals:CycleSteps()
-    local face = seal or (steps and steps[1])
+    -- The seal key wears the seal that is on you. With none up it shows
+    -- Seal of Righteousness faded, so a bare paladin reads at a glance.
+    local face = seal
+    if not face then
+        face = (ns.Seals.names and ns.Seals.names[RIGHTEOUSNESS]) and RIGHTEOUSNESS
+            or ns.Seals:MainSeal()
+    end
     f.cycle.icon:SetTexture(ns.Seals:IconFor(face) or QUESTION)
-    f.cycle.icon:SetDesaturated(steps == nil)
-    f.cycle.icon:SetAlpha(steps and 1 or 0.35)
+    f.cycle.icon:SetDesaturated(seal == nil)
+    f.cycle.icon:SetAlpha(seal and 1 or 0.4)
     ringColor(f.cycle, seal and C.fel or C.border)
 
     local chosen = ns.Seals:MainBlessing()

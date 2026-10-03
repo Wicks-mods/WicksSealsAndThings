@@ -1,5 +1,10 @@
 # Wick's Seals and Things - Changelog
 
+## Unreleased
+
+- The seal key wears the seal that is on you, and shows Seal of
+  Righteousness faded when no seal is up.
+
 ## 0.9.0
 
 One version across the suite for the Forever beta. Every addon carries the
