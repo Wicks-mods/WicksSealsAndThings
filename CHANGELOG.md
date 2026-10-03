@@ -13,6 +13,8 @@ First build. The paladin kit for World of Warcraft: Forever.
   `/wsl seal <name>` chooses the seal, `/wsl reseal off` judges alone.
 - Seal cycle key: Seal of the Crusader, Judgement, fighting seal, one
   step per press, as a castsequence. `/wsl cycle` sets your own steps.
+- Blessing key: your blessing on a friendly target, or on you with none.
+  Follows the blessing on you; `/wsl bless <name>` chooses one.
 - Weapon swap keys: two-hander, and one-hander with shield. They
   remember what you last wore, name pieces by item id, and fall back to
   the best piece carried. `/wsl pin` chooses by hand.

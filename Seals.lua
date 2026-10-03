@@ -93,9 +93,11 @@ function Seals:ActiveSeal()
 end
 
 function Seals:ActiveBlessing()
-    return auraWith(function(n)
+    local name, why = auraWith(function(n)
         return starts(n, "Blessing of ") or starts(n, "Greater Blessing of ")
     end)
+    if why ~= "restricted" then self.lastBlessing = name end
+    return name, why
 end
 
 -- The aura bar first, since that is not withheld in combat, then the
@@ -180,6 +182,35 @@ function Seals:JudgeMacro()
         lines[#lines + 1] = "/cast " .. seal
     end
     return table.concat(lines, "\n")
+end
+
+-- The blessing the key casts. Chosen with /wsl bless <name>, otherwise
+-- the one that is on you, otherwise Might, otherwise the first one you
+-- know. A Greater Blessing is allowed, with its reagent, if that is
+-- what you name.
+function Seals:MainBlessing()
+    if not self.blessings then self:Scan() end
+    local list = self.blessings or {}
+    local want = db().blessing
+    if type(want) == "string" and want ~= "" then
+        for _, e in ipairs(list) do
+            if e.name:lower() == want:lower() then return e.name end
+        end
+    end
+    if self.lastBlessing then
+        for _, e in ipairs(list) do if e.name == self.lastBlessing then return e.name end end
+    end
+    for _, e in ipairs(list) do
+        if e.name == "Blessing of Might" then return e.name end
+    end
+    return list[1] and list[1].name or nil
+end
+
+-- On a friendly target when you have one, on yourself otherwise.
+function Seals:BlessMacro()
+    local b = self:MainBlessing()
+    if not b then return "" end
+    return ("#showtooltip %s\n/cast [help,nodead][@player] %s"):format(b, b)
 end
 
 -- The seal dance, as the totem twist is for a shaman: one key, one

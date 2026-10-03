@@ -50,6 +50,7 @@ local PROFILE_DEFAULTS = {
     wantFury    = false,   -- Righteous Fury on the checklist, for the tank
     reseal      = true,    -- the Judgement key puts the seal back after
     mainSeal    = nil,     -- the seal to fight under; nil follows what you had on
+    blessing    = nil,     -- the blessing key's spell; nil follows what you had on
     cycle       = nil,     -- the cycle key's steps; nil is the default dance, false is off
     cycleReset  = 15,      -- seconds of quiet before the cycle starts over
 }
@@ -188,6 +189,7 @@ for i = 1, 6 do
 end
 _G["BINDING_NAME_CLICK WicksSealsJudgeButton:LeftButton"] = "Judgement, then reseal"
 _G["BINDING_NAME_CLICK WicksSealsCycleButton:LeftButton"] = "Seal cycle"
+_G["BINDING_NAME_CLICK WicksSealsBlessButton:LeftButton"] = "Blessing"
 _G["BINDING_NAME_CLICK WicksSealsTwoHandButton:LeftButton"] = "Two-hander"
 _G["BINDING_NAME_CLICK WicksSealsShieldButton:LeftButton"] = "Sword and board"
 BINDING_NAME_WICKSSEALS_TOGGLE = "Toggle seal strip"
@@ -246,6 +248,31 @@ A:RegisterSlash(function(_, msg)
         A:Print(("fighting seal: %s."):format(ns.Seals:MainSeal() or "none"))
         return
     end
+    if lower:match("^bless") then
+        local want = msg:match("^%a+%s+(.+)$")
+        if not want then
+            A:Print(("blessing key: %s%s. /wsl bless <name> to choose one, /wsl bless auto to follow what you had on.")
+                :format(ns.Seals:MainBlessing() or "none known", db.blessing and "" or " (following you)"))
+            return
+        end
+        if want:lower() == "auto" then db.blessing = nil
+        else
+            local found
+            for _, e in ipairs(ns.Seals.blessings or {}) do
+                if e.name:lower() == want:lower() then found = e.name break end
+            end
+            if not found then
+                for _, e in ipairs(ns.Seals.blessings or {}) do
+                    if e.name:lower():find(want:lower(), 1, true) then found = e.name break end
+                end
+            end
+            if not found then A:Print("no blessing called " .. want .. " in your book.") return end
+            db.blessing = found
+        end
+        ns.UI:Rebuild()
+        A:Print(("blessing key: %s."):format(ns.Seals:MainBlessing() or "none"))
+        return
+    end
     if lower:match("^reseal") then
         local want = lower:match("^reseal%s+(%a+)")
         if want == "on" then db.reseal = true
@@ -301,10 +328,11 @@ A:RegisterSlash(function(_, msg)
             #(S.seals or {}), #(S.blessings or {}), #(S.auras or {}), S.judge and S.judge.name or "not yet"))
         A:Print(("seal: %s   blessing: %s   aura: %s"):format(say(seal, sealWhy), say(bless, blessWhy), say(aura, auraWhy)))
         A:Print("judgement key: " .. (S:JudgeMacro():gsub("\n", " | ")))
+        A:Print("blessing key: " .. ((S:BlessMacro() ~= "" and S:BlessMacro() or "empty"):gsub("\n", " | ")))
         A:Print("cycle key: " .. ((S:CycleMacro() ~= "" and S:CycleMacro() or "empty"):gsub("\n", " | ")))
         if ns.swap and ns.isPaladin then ns.swap:Report(function(line) A:Print(line) end) end
         return
     end
 
-    A:Print("commands: show | strip | lock | unlock | kit | options | seal <name|auto> | reseal [on|off] | cycle [...] | swap [on|off] | pin <2h|1h|shield> [link|clear] | fury [on|off] | cd | status")
+    A:Print("commands: show | strip | lock | unlock | kit | options | seal <name|auto> | bless <name|auto> | reseal [on|off] | cycle [...] | swap [on|off] | pin <2h|1h|shield> [link|clear] | fury [on|off] | cd | status")
 end, "/wsl", "/wseals")

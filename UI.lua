@@ -201,6 +201,24 @@ function UI:BuildStrip()
         GameTooltip:Show()
     end)
 
+    -- The blessing key: a friendly target if you have one, you if not.
+    f.bless = makeSecure(f, "WicksSealsBlessButton", "macro")
+    f.bless:SetScript("OnEnter", function(s)
+        GameTooltip:SetOwner(s, "ANCHOR_TOP")
+        local b = ns.Seals:MainBlessing()
+        GameTooltip:SetText(b or "Blessing", 1, 1, 1)
+        if not b then
+            GameTooltip:AddLine("No blessing learned yet.", grey())
+        else
+            if ns.Seals.lastBlessing == b then
+                GameTooltip:AddLine("On you.", C.fel[1], C.fel[2], C.fel[3])
+            end
+            GameTooltip:AddLine("Casts on a friendly target, or on you with none.", 0.8, 0.8, 0.8, true)
+            GameTooltip:AddLine("/wsl bless <name> to choose the blessing.", grey())
+        end
+        GameTooltip:Show()
+    end)
+
     f.div1 = Chrome:Texture(f, "ARTWORK", C.border); f.div1:SetWidth(1)
     f.div2 = Chrome:Texture(f, "ARTWORK", C.border); f.div2:SetWidth(1)
 
@@ -278,6 +296,13 @@ function UI:Rebuild()
     f.cycle:SetPoint("LEFT", x, 0)
     x = x + BTN + 2
 
+    local bl = ns.Seals:BlessMacro()
+    f.bless:SetAttribute("macrotext", bl)
+    f.bless:SetAttribute("macrotext1", bl)
+    f.bless:ClearAllPoints()
+    f.bless:SetPoint("LEFT", x, 0)
+    x = x + BTN + 2
+
     f.div1:ClearAllPoints()
     f.div1:SetPoint("TOP", f, "TOPLEFT", x, -2)
     f.div1:SetPoint("BOTTOM", f, "BOTTOMLEFT", x, 2)
@@ -347,6 +372,14 @@ function UI:Refresh()
     f.cycle.icon:SetDesaturated(steps == nil)
     f.cycle.icon:SetAlpha(steps and 1 or 0.35)
     ringColor(f.cycle, C.border)
+
+    local bless, blessWhy = ns.Seals:ActiveBlessing()
+    if blessWhy == "restricted" then bless = ns.Seals.lastBlessing end
+    local chosen = ns.Seals:MainBlessing()
+    f.bless.icon:SetTexture(ns.Seals:IconFor(chosen) or QUESTION)
+    f.bless.icon:SetDesaturated(chosen == nil)
+    f.bless.icon:SetAlpha(chosen and 1 or 0.35)
+    ringColor(f.bless, (chosen and bless == chosen) and C.fel or C.border)
 
     f.sealText:SetText(seal or "no seal")
     tint(f.sealText, seal and C.text or DIM)

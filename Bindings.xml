@@ -7,6 +7,7 @@
     <Binding name="CLICK WicksSealsButton6:LeftButton" category="ADDONS"/>
     <Binding name="CLICK WicksSealsJudgeButton:LeftButton" category="ADDONS"/>
     <Binding name="CLICK WicksSealsCycleButton:LeftButton" category="ADDONS"/>
+    <Binding name="CLICK WicksSealsBlessButton:LeftButton" category="ADDONS"/>
     <Binding name="CLICK WicksSealsTwoHandButton:LeftButton" category="ADDONS"/>
     <Binding name="CLICK WicksSealsShieldButton:LeftButton" category="ADDONS"/>
     <Binding name="WICKSSEALS_TOGGLE" category="ADDONS">

@@ -12,8 +12,8 @@ two keys to swap between your two-hander and your shield.
 ## What it does
 
 **Seal strip.** One 30px row: a key per seal you know, Judgement, the
-seal cycle, two lines saying which seal and aura are up, and the two
-weapon swap keys. The seal that is on you is ringed in fel green.
+seal cycle, a blessing key, two lines saying which seal and aura are up,
+and the two weapon swap keys. The seal that is on you is ringed in fel green.
 Shift-drag moves it even when locked.
 
 Nothing on the strip is a list written down from Classic. Which seals,
@@ -33,6 +33,11 @@ one step per press, starting over on a new target or after fifteen
 quiet seconds. `/wsl cycle <spell, spell, ...>` sets your own steps,
 `/wsl cycle reset <seconds>` the quiet time, `/wsl cycle off` removes
 it.
+
+**Blessing key.** Casts your blessing on a friendly target, or on you
+with none. It follows the blessing that is on you, or the one you name
+with `/wsl bless <name>`; a Greater Blessing works if that is what you
+name. Lit while that blessing is on you.
 
 **Weapon swap keys.** Two keys, tied to nothing. One puts your
 two-hander in your hands, the other your one-hander and shield. They
@@ -62,6 +67,7 @@ every other kit.
 | `/wsl` | show or hide the seal strip |
 | `/wsl kit` | talents and the pre-pull checklist |
 | `/wsl seal <name>` | the seal Judgement puts back; `auto` follows what you had on |
+| `/wsl bless <name>` | the blessing key's spell; `auto` follows what you had on |
 | `/wsl reseal on|off` | whether the Judgement key reseals |
 | `/wsl cycle ...` | the cycle key's steps, `auto`, `off`, or `reset <seconds>` |
 | `/wsl swap on|off` | keep the swap keys loaded |
