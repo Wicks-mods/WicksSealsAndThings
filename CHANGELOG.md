@@ -2,8 +2,8 @@
 
 ## Unreleased
 
-- The seal key wears the seal that is on you, and shows Seal of
-  Righteousness faded when no seal is up.
+- The seal key wears the seal that is on you, and shows Seal of the
+  Crusader faded when no seal is up.
 
 ## 0.9.0
 

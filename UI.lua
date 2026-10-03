@@ -20,7 +20,7 @@ local UI = {}
 ns.UI = UI
 
 local QUESTION = "Interface\\Icons\\INV_Misc_QuestionMark"
-local RIGHTEOUSNESS = "Seal of Righteousness"
+local CRUSADER = "Seal of the Crusader"
 local DIM = { 0.35, 0.33, 0.40, 1 }
 
 local STRIP_H = 30
@@ -291,10 +291,10 @@ function UI:Refresh()
     if blessWhy == "restricted" then bless = ns.Seals.lastBlessing end
 
     -- The seal key wears the seal that is on you. With none up it shows
-    -- Seal of Righteousness faded, so a bare paladin reads at a glance.
+    -- Seal of the Crusader faded, the press that opens the cycle.
     local face = seal
     if not face then
-        face = (ns.Seals.names and ns.Seals.names[RIGHTEOUSNESS]) and RIGHTEOUSNESS
+        face = (ns.Seals.names and ns.Seals.names[CRUSADER]) and CRUSADER
             or ns.Seals:MainSeal()
     end
     f.cycle.icon:SetTexture(ns.Seals:IconFor(face) or QUESTION)
