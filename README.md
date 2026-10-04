@@ -1,7 +1,7 @@
 # Wick's Seals and Things
 
 The paladin kit for **World of Warcraft: Forever**, built on
-[WickCore](https://github.com/Wicksmods/WickCore).
+[WickCore](https://github.com/Wicks-mods/WickCore).
 
 A paladin's loadout is a seal, a blessing, an aura and the weapon in
 hand. This kit puts the seal dance on one key, your blessing on
@@ -99,4 +99,4 @@ World of Warcraft: Forever, 1.60.x, Interface 16001. Requires WickCore.
 
 ## License
 
-MIT for code (see [LICENSE](LICENSE)). Brand chrome and the "Wick's" wordmark are trademarked, see [TRADEMARK.md](https://github.com/Wicksmods/WickSuite/blob/main/TRADEMARK.md). Racial data from [talentsforever.com](https://talentsforever.com) (CC BY 4.0) via WickCore.
+MIT for code (see [LICENSE](LICENSE)). Brand chrome and the "Wick's" wordmark are trademarked, see [TRADEMARK.md](https://github.com/Wicks-mods/WickSuite/blob/main/TRADEMARK.md). Racial data from [talentsforever.com](https://talentsforever.com) (CC BY 4.0) via WickCore.
