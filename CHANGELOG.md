@@ -1,6 +1,6 @@
 # Wick's Seals and Things - Changelog
 
-## Unreleased
+## 0.9.1 (2026-11-05)
 
 - The seal key keeps the last seal you fought under after it fades,
   and across reloads. It used to forget it the moment the seal ran
