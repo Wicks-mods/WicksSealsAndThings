@@ -1,6 +1,6 @@
 # Wick's Seals and Things - Changelog
 
-## Unreleased
+## 0.9.3 (2026-11-15)
 
 - The fighting seal and the blessing are picked on the options page, from the seals and blessings in your book, or left to follow the last one you used.
 - The seal key can be switched off and on there, and the quiet time before it starts over is a stepper, from 5 to 120 seconds.
