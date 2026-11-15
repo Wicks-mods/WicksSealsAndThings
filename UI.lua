@@ -189,11 +189,11 @@ function UI:BuildStrip()
         GameTooltip:SetText("Seal key", 1, 1, 1)
         local steps = ns.Seals:CycleSteps()
         if not steps then
-            GameTooltip:AddLine(ns.db and ns.db.profile.cycle == false and "Off. /wsl cycle auto turns it on."
+            GameTooltip:AddLine(ns.db and ns.db.profile.cycle == false and "Off. Turn it on under Options, Wick's Mods."
                 or "No seal learned yet.", grey())
         else
             GameTooltip:AddLine("One press per step: " .. table.concat(steps, ", ") .. ".", 0.8, 0.8, 0.8, true)
-            GameTooltip:AddLine(("Back to the first after %d quiet seconds, or when combat ends. /wsl cycle to change it.")
+            GameTooltip:AddLine(("Back to the first after %d quiet seconds, or when combat ends. Change it under Options, Wick's Mods.")
                 :format((ns.db and ns.db.profile.cycleReset) or 27), grey())
         end
         if ns.Seals.lastSeal then
@@ -215,7 +215,7 @@ function UI:BuildStrip()
                 GameTooltip:AddLine("On you.", C.fel[1], C.fel[2], C.fel[3])
             end
             GameTooltip:AddLine("Casts on a friendly target, or on you with none.", 0.8, 0.8, 0.8, true)
-            GameTooltip:AddLine("/wsl bless <name> to choose the blessing.", grey())
+            GameTooltip:AddLine("Choose the blessing under Options, Wick's Mods.", grey())
         end
         GameTooltip:Show()
     end)

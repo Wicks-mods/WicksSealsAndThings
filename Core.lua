@@ -170,6 +170,46 @@ function A:OnEnable()
             function(v) db.stripLocked = v end, y)
         y = O:Note(page, "The seal key, a blessing key and the two weapon swap keys in one row, with the seal and aura that are on you. Shift-drag moves the strip even when locked.", y)
 
+        y = O:Heading(page, "The seal key", y - 6)
+        y = O:Check(page, "Keep the seal key loaded", function() return db.cycle ~= false end,
+            function(v)
+                -- Off is false; on goes back to the kit's own steps unless a
+                -- list set by hand is still there.
+                if not v then db.cycle = false elseif db.cycle == false then db.cycle = nil end
+                ns.UI:Rebuild()
+            end, y)
+        if O.Choice then
+            y = O:Choice(page, "Fighting seal",
+                function() return db.mainSeal or nil end,
+                function(v) db.mainSeal = v; ns.UI:Rebuild() end, y, {
+                    options = function()
+                        local out = { { value = nil, text = "The last one I used" } }
+                        for _, e in ipairs(ns.Seals.seals or {}) do out[#out + 1] = { value = e.name, text = e.name } end
+                        return out
+                    end,
+                    other = function(v) return tostring(v) end,
+                })
+        end
+        y = O:Stepper(page, "Start over after quiet seconds",
+            function() return tonumber(db.cycleReset) or 27 end,
+            function(v) db.cycleReset = math.max(5, math.min(120, v)); ns.UI:Rebuild() end, y)
+        y = O:Note(page, "One press per step: Seal of the Crusader, then your fighting seal. It starts over after that many quiet seconds, and when combat ends, so a new fight opens on the Crusader. A longer list of steps can still be set by hand with /wsl cycle.", y)
+
+        if O.Choice then
+            y = O:Heading(page, "The blessing key", y - 6)
+            y = O:Choice(page, "Blessing",
+                function() return db.blessing or nil end,
+                function(v) db.blessing = v; ns.UI:Rebuild() end, y, {
+                    options = function()
+                        local out = { { value = nil, text = "The last one I used" } }
+                        for _, e in ipairs(ns.Seals.blessings or {}) do out[#out + 1] = { value = e.name, text = e.name } end
+                        return out
+                    end,
+                    other = function(v) return tostring(v) end,
+                })
+            y = O:Note(page, "The key casts it on a friendly target, or on you with none.", y)
+        end
+
         y = O:Heading(page, "Checklist", y - 6)
         y = O:Check(page, "Expect Righteous Fury (tanking)", function() return db.wantFury == true end,
             function(v) db.wantFury = v; if addon.kit and addon.kit.checklist then addon.kit.checklist:Refresh() end end, y)
