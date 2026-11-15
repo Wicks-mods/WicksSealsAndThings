@@ -1,5 +1,9 @@
 # Wick's Seals and Things - Changelog
 
+## Unreleased
+
+- Shows in the game's addon list with an icon and the two-tone Wick title, under a Wick's Mods heading.
+
 ## 0.9.1 (2026-11-05)
 
 - The seal key keeps the last seal you fought under after it fades,
@@ -22,7 +26,7 @@ One version across the suite for the Forever beta. Every addon carries the
 same number so the suite goes to 1.0.0 together at launch. Nothing changed
 from 0.1.0 beyond the number.
 
-## 0.1.0 - 2026-10-03
+## 0.1.0 (2026-10-03)
 
 First build. The paladin kit for World of Warcraft: Forever.
 
