@@ -1,5 +1,13 @@
 # Wick's Seals and Things - Changelog
 
+## Unreleased
+
+### Fixed
+
+- CurseForge now installs WickCore along with this addon. No file said it
+  was needed, so the app installed the addon alone and it could not run.
+- The message shown when WickCore is missing says where to get it.
+
 ## 0.9.3 (2026-11-15)
 
 - The fighting seal and the blessing are picked on the options page, from the seals and blessings in your book, or left to follow the last one you used.
