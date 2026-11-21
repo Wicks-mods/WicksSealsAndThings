@@ -2,7 +2,7 @@
 ## Title: |cffD4C8A1Wick's|r |cff4FC778Seals and Things|r
 ## Notes: Paladin loadout kit for World of Warcraft: Forever. Seal strip with a Judgement key, two-hander and sword-and-board swap keys, talents, pre-pull checklist, racials.
 ## Author: Wick
-## Version: 0.9.3
+## Version: 0.9.4
 ## OptionalDeps: WickCore
 ## SavedVariables: WicksSealsSaved
 ## IconTexture: Interface\Icons\Ability_ThunderBolt

@@ -1,6 +1,6 @@
 # Wick's Seals and Things - Changelog
 
-## Unreleased
+## 0.9.4 (2026-11-21)
 
 ### Fixed
 
